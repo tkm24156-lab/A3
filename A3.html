@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A3 - Ensiklopedia Resmi</title>
+<style>
+  :root {
+    --biru: #1a2a4f;
+    --abu: #f4f5f7;
+    --teks: #222;
+    --garis: #d9dce3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: var(--abu);
+    color: var(--teks);
+    line-height: 1.6;
+  }
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--garis);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header .logo { font-weight: 700; color: var(--biru); font-size: 20px; }
+  nav a {
+    margin-left: 18px;
+    color: var(--biru);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+  .hero { text-align: center; padding: 24px 0 36px; }
+  .logo-hero { width: 100px; height: 100px; object-fit: contain; margin: 0 auto 12px; display: block; }
+  .hero h1 { font-size: 36px; color: var(--biru); }
+  .hero .tagline { color: #555; margin-top: 8px; }
+  .section-title {
+    font-size: 18px;
+    color: var(--biru);
+    border-bottom: 2px solid var(--biru);
+    padding-bottom: 6px;
+    margin: 32px 0 16px;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 600px) {
+    .info-grid { grid-template-columns: 1fr; }
+  }
+  .slide-wrap { position: relative; }
+  .slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--biru);
+    color: #fff;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 1;
+  }
+  .slide-btn.kiri { left: -12px; }
+  .slide-btn.kanan { right: -12px; }
+  .momen-card {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+    background: #fff;
+    border: 1px solid var(--garis);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .momen-card { cursor: pointer; transition: transform .15s, box-shadow .15s; }
+  .momen-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  .momen-card .tanggal { font-size: 12px; color: #777; }
+  .foto img, .foto-profil img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+  }
+  .founder-badge {
+    display: inline-block;
+    background: #b8912f;
+    color: #1a1a1a;
+    border: 1px solid #8f6f22;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+  }
+  .founder-profil { text-align: center; margin: 14px 0; }
+  .tanggal-momen { text-align: center; font-size: 13px; color: #777; }
+  .momen-card h3 { font-size: 16px; color: var(--biru); margin: 4px 0 8px; }
+  .momen-card p { font-size: 14px; color: #444; }
+  .info-card {
+    background: #fff;
+    border: 1px solid var(--garis);
+    border-radius: 6px;
+    padding: 18px;
+  }
+  .info-card h3 { font-size: 15px; color: var(--biru); margin-bottom: 6px; }
+  .favorite-section { margin: 20px 0; }
+  .favorite-section h4 { color: var(--biru); font-size: 15px; margin: 14px 0 8px; }
+  .favorite-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 12px; }
+  .favorite-card { background: #fff; border: 1px solid var(--garis); border-radius: 8px; padding: 10px; text-align: center; }
+  .favorite-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; background: #e6e9ef; }
+  .favorite-card a { display: inline-block; margin-top: 8px; color: var(--biru); font-weight: 700; text-decoration: underline; }
+  .favorite-card p { color: #666; font-size: 12px; margin-top: 4px; }
+  .favorite-note { color: #777; font-size: 12px; margin: 8px 0; }
+
+  .music-section {
+    margin: 24px 0;
+    padding: 18px;
+    border: 1px solid var(--garis);
+    border-radius: 8px;
+    background: #fafbfc;
+  }
+  .music-section h3 { color: var(--biru); font-size: 18px; margin-bottom: 12px; }
+  .music-player { display: grid; grid-template-columns: minmax(120px, 180px) 1fr; gap: 18px; align-items: center; }
+  .music-cover { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; background: #e6e9ef; }
+  .music-meta h4 { color: var(--biru); font-size: 17px; margin: 4px 0 10px; }
+  .music-meta audio { width: 100%; }
+  .music-status, .easter-status { min-height: 1.5em; color: #666; font-size: 13px; margin: 6px 0; }
+  .music-controls { display: flex; gap: 8px; margin-top: 10px; }
+  .music-controls button, .love-trigger, .nama-rahasia {
+    border: 1px solid var(--biru);
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: var(--biru);
+    background: #fff;
+    cursor: pointer;
+    font: inherit;
+  }
+  .music-controls button:hover, .love-trigger:hover, .nama-rahasia:hover { background: #eef2f9; }
+  .nama-rahasia { border: 0; padding: 0 4px; font-size: inherit; font-weight: inherit; background: transparent; }
+  .galeri-easter { margin-top: 20px; padding: 18px; border: 1px solid var(--garis); border-radius: 8px; background: #fafbfc; }
+  .galeri-easter h3 { color: var(--biru); margin-bottom: 12px; }
+  .galeri-slide { max-width: 520px; margin: 0 auto; }
+  .galeri-slide img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; background: #e6e9ef; }
+  .galeri-slide figcaption { font-size: 14px; color: #666; text-align: center; margin-top: 8px; }
+  .galeri-kontrol { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 12px; }
+  .galeri-kontrol button { border: 1px solid var(--biru); color: var(--biru); background: #fff; border-radius: 5px; padding: 8px 12px; cursor: pointer; }
+  .galeri-kontrol span { color: #666; font-size: 13px; }
+  .love-reveal { margin-top: 12px; padding: 16px; border-radius: 8px; background: #fff0f5; color: #a31852; text-align: center; font-size: 20px; font-weight: 700; }
+  .galeri-easter[hidden], .love-reveal[hidden] { display: none !important; }
+  @media (max-width: 600px) {
+    .music-player { grid-template-columns: 1fr; }
+    .music-cover { width: min(100%, 240px); margin: 0 auto; }
+  }
+
+  /* Slider anggota */
+  .slider-wrap { position: relative; }
+  .slider {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 8px 4px 16px;
+  }
+  .slider::-webkit-scrollbar { display: none; }
+  .card {
+    flex: 0 0 200px;
+    scroll-snap-align: start;
+    background: #fff;
+    border: 1px solid var(--garis);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  .foto {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #e6e9ef;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .card .nama { font-weight: 700; color: var(--biru); }
+  .card .jabatan { font-size: 13px; color: #555; margin-top: 4px; }
+  .slider-nav { text-align: center; color: #777; font-size: 13px; }
+
+  /* Halaman profil (ditampilkan saat kartu diklik) */
+  .profil { display: none; }
+  .profil.aktif { display: block; }
+  .profil .kembali {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: var(--biru);
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: underline;
+    background: none;
+    border: none;
+  }
+  .artikel {
+    background: #fff;
+    border: 1px solid var(--garis);
+    border-radius: 6px;
+    padding: 28px;
+  }
+  .artikel h2 { color: var(--biru); font-size: 26px; }
+  .artikel .ringkasan { color: #555; margin: 8px 0 18px; font-style: italic; }
+  .artikel h4 { color: var(--biru); margin: 18px 0 6px; font-size: 15px; }
+  .infobox {
+    float: right;
+    width: 230px;
+    margin: 0 0 16px 20px;
+    border: 1px solid var(--garis);
+    background: #fafbfc;
+    font-size: 13px;
+  }
+  .infobox .judul-box { background: var(--biru); color: #fff; padding: 8px; text-align: center; font-weight: 700; }
+  .infobox table { width: 100%; border-collapse: collapse; }
+  .infobox td { padding: 6px 8px; border-top: 1px solid var(--garis); vertical-align: top; }
+  .infobox td:first-child { color: #666; width: 40%; }
+  .foto-profil {
+    width: 160px;
+    height: 160px;
+    background: #e6e9ef;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 13px;
+    margin: 0 auto 16px;
+  }
+  .artikel h2 { text-align: center; }
+  .julukan { text-align: center; color: #555; font-style: italic; margin-bottom: 8px; }
+  .kutipan {
+    border-left: 3px solid var(--biru);
+    padding: 8px 14px;
+    background: #fafbfc;
+    font-style: italic;
+    color: #444;
+  }
+  .tabel-data { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tabel-data td { padding: 8px; border-top: 1px solid var(--garis); }
+  .tabel-data td:first-child { color: #666; width: 40%; }
+  .sosmed { display: flex; gap: 12px; flex-wrap: wrap; }
+  .sosmed a {
+    color: var(--biru);
+    border: 1px solid var(--garis);
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .catatan { font-size: 12px; color: #777; margin-top: 20px; border-top: 1px solid var(--garis); padding-top: 10px; }
+  footer { text-align: center; color: #888; font-size: 12px; padding: 24px; }
+
+  .tombol-tema {
+    background: none;
+    border: 1px solid var(--garis);
+    color: var(--biru);
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-left: 18px;
+  }
+
+  /* Mode gelap: aksen neon hanya di garis, judul, dan tombol */
+  [data-theme="dark"] {
+    --biru: #c6ff3d;
+    --abu: #0b0d12;
+    --teks: #e6e8ee;
+    --garis: #2a2f3a;
+  }
+  [data-theme="dark"] body { background: var(--abu); color: var(--teks); }
+  [data-theme="dark"] header,
+  [data-theme="dark"] .info-card,
+  [data-theme="dark"] .favorite-card,
+  [data-theme="dark"] .music-section,
+  [data-theme="dark"] .galeri-easter,
+  [data-theme="dark"] .card,
+  [data-theme="dark"] .momen-card,
+  [data-theme="dark"] .artikel,
+  [data-theme="dark"] .foto,
+  [data-theme="dark"] .foto-profil,
+  [data-theme="dark"] .infobox { background: #141821; border-color: var(--garis); }
+  [data-theme="dark"] .card .jabatan,
+  [data-theme="dark"] .favorite-card p,
+  [data-theme="dark"] .favorite-note,
+  [data-theme="dark"] .music-status,
+  [data-theme="dark"] .easter-status,
+  [data-theme="dark"] .galeri-slide figcaption,
+  [data-theme="dark"] .galeri-kontrol span,
+  [data-theme="dark"] .momen-card p,
+  [data-theme="dark"] .artikel .ringkasan,
+  [data-theme="dark"] .julukan,
+  [data-theme="dark"] .hero .tagline,
+  [data-theme="dark"] .slider-nav,
+  [data-theme="dark"] .catatan { color: #9aa3b2; }
+  [data-theme="dark"] .kutipan { background: #0f131a; color: #c9d0dc; border-left-color: var(--biru); }
+  [data-theme="dark"] .tabel-data td,
+  [data-theme="dark"] .infobox td { border-top-color: var(--garis); }
+  [data-theme="dark"] .sosmed a { border-color: var(--biru); }
+  [data-theme="dark"] .slide-btn { background: #141821; color: var(--biru); border: 1px solid var(--biru); }
+  [data-theme="dark"] .kembali { color: var(--biru); }
+  [data-theme="dark"] .section-title,
+  [data-theme="dark"] .infobox .judul-box { border-bottom-color: var(--biru); }
+  [data-theme="dark"] .infobox .judul-box { background: #141821; color: var(--biru); border-bottom: 1px solid var(--biru); }
+  [data-theme="dark"] .founder-badge {
+    background: #ffd34d;
+    color: #0b0d12;
+    border-color: #ffd34d;
+  }
+  [data-theme="dark"] .tombol-tema { color: var(--biru); border-color: var(--biru); }
+  [data-theme="dark"] .music-controls button,
+  [data-theme="dark"] .galeri-kontrol button,
+  [data-theme="dark"] .love-trigger { background: #141821; color: var(--biru); }
+  [data-theme="dark"] .love-reveal { background: #3b1728; color: #ff9cc3; }
+  [data-theme="dark"] h1,
+  [data-theme="dark"] h2,
+  [data-theme="dark"] h3,
+  [data-theme="dark"] h4,
+  [data-theme="dark"] .logo,
+  [data-theme="dark"] .card .nama,
+  [data-theme="dark"] nav a { color: #f2f2f2; }
+  [data-theme="dark"] nav a:hover { color: var(--biru); }
+  [data-theme="dark"] .section-title { color: #f2f2f2; border-bottom-width: 1px; }
+  [data-theme="dark"] .card:hover,
+  [data-theme="dark"] .momen-card:hover { box-shadow: none; border-color: var(--biru); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">A3</div>
+  <nav>
+    <a href="#" onclick="tampilUtama(); return false;">Beranda</a>
+    <a href="#anggota">Anggota</a>
+    <a href="#momen">A3 News</a>
+    <button class="tombol-tema" onclick="toggleTema()">Mode Gelap</button>
+  </nav>
+</header>
+
+<main id="utama">
+  <section class="hero">
+    <!-- Logo: simpan foto logo dengan nama logo-a3.jpg di folder yang sama dengan index.html -->
+    <img class="logo-hero" src="a3.jpeg" alt="Logo A3">
+    <h1>A3</h1>
+    <p class="tagline">Antek Antek Asing</p>
+  </section>
+
+  <h2 class="section-title">Tentang Kami</h2>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3>Fungsi</h3>
+      <p>menjadi wadah kenangan kami di masa depan</p>
+    </div>
+    <div class="info-card">
+      <h3>Tujuan</h3>
+      <p>Memiliki arsip digital yang bisa dinikmati seluruh anggota, dan membuat siapa pun merasa "kenal" A3 hanya dengan membaca halaman ini.</p>
+    </div>
+    <div class="info-card">
+      <h3>Visi</h3>
+      <p>Menjadi rumah digital yang mengabadikan persahabatan sembilan orang, dengan cara paling serius sekaligus paling konyol.</p>
+    </div>
+    <div class="info-card">
+      <h3>Misi</h3>
+      <p>Mendokumentasikan setiap anggota secara lengkap dan mengarsipkan momen kocak yang pernah terjadi.</p>
+    </div>
+  </div>
+
+  <h2 class="section-title" id="anggota">Anggota</h2>
+  <div class="slider-wrap">
+    <button class="slide-btn kiri" onclick="geserAnggota(-1)" aria-label="Sebelumnya">&#8249;</button>
+    <div class="slider" id="slider">
+      <!-- Kartu anggota placeholder: ganti nama dan jabatan nanti -->
+      <a class="card" href="#" onclick="bukaProfil('anggota1'); return false;">
+        <div class="foto"><img src="dzaki.jpg" alt="DZAKI"></div>
+        <span class="founder-badge">The Founder</span>
+        <div class="nama">DZAKI</div>
+        <div class="jabatan">progamer katanya</div>
+      </a>
+      <a class="card" href="#" onclick="bukaProfil('anggota2'); return false;">
+        <div class="foto"><img src="ARK.jpeg" alt="ARKHAN"></div>
+        <span class="founder-badge">The Founder</span>
+        <div class="nama">ARKHAN</div>
+        <div class="jabatan">Kementrian penyolongan</div>
+      </a>
+      <a class="card" href="#" onclick="bukaProfil('anggota3'); return false;">
+        <div class="foto"><img src="nop.jpeg" alt="BAGONG"></div>
+        <span class="founder-badge">The Founder</span>
+        <div class="nama">NAUFAL</div>
+        <div class="jabatan">spidermen peterparker</div>
+      </a>
+      <a class="card" href="#" onclick="bukaProfil('anggota4'); return false;">
+        <div class="foto"><img src="kev.jpeg" alt="KEVIN"></div>
+        <div class="nama">KEVIN</div>
+        <div class="jabatan"> astronomi/botani </div>
+      </a>
+      <a class="card" href="#" onclick="bukaProfil('anggota5'); return false;">
+        <div class="foto"><img src="kik.jpeg" alt="RISKY"></div>
+        <div class="nama">RISKY</div>
+        <div class="jabatan">pakar analis anime harem</div>
+      </a>
+      <a class="card" href="#" onclick="bukaProfil('anggota6'); return false;">
+        <div class="foto"><img src="crt.jpeg" alt="AFWAN"></div>
+        <div class="nama">AFWAN</div>
+        <div class="jabatan">KING CRT</div>
+      </a>
+      <a class="card" href="#" onclick="bukaProfil('anggota7'); return false;">
+        <div class="foto"><img src="rizz.jpeg" alt="HARIS"></div>
+        <div class="nama">HARIS</div>
+        <div class="jabatan">Penasihat Sarkasme</div>
+      </a>
+      <a class="card" href="#" onclick="bukaProfil('anggota8'); return false;">
+        <div class="foto"><img src="faz.jpeg" alt="FAZA"></div>
+        <div class="nama">FAZA</div>
+        <div class="jabatan">orang have FUN</div>
+      </a>
+      <a class="card" href="#" onclick="bukaProfil('anggota9'); return false;">
+        <div class="foto"><img src="dzaka.jpg" alt="DZAKA"></div>
+        <div class="nama">DZAKA</div>
+        <div class="jabatan">sipaling elitis</div>
+      </a>
+    </div>
+    <button class="slide-btn kanan" onclick="geserAnggota(1)" aria-label="Berikutnya">&#8250;</button>
+    <p class="slider-nav">Geser untuk melihat anggota lain. Klik kartu untuk membuka profil.</p>
+  </div>
+</main>
+
+<!-- Halaman profil contoh -->
+<main id="profil-anggota1" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="dzaki.jpg" alt="DZAKI"></div>
+    <h2><button class="nama-rahasia" id="nama-dzaki" type="button" onclick="klikNamaDzaki()" aria-label="Nama DZAKI, easter egg">DZAKI</button></h2>
+    <p class="easter-status" id="status-dzaki" aria-live="polite"></p>
+    <section class="favorite-section" aria-label="Game dan anime favorit DZAKI">
+      <h3>Favorit DZAKI</h3>
+      <h4>Game</h4>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="undertale.png" alt="Sampul Undertale"><a href="https://en.wikipedia.org/wiki/Undertale" target="_blank" rel="noopener noreferrer">Undertale</a><p>Pencipta: Toby Fox</p></article>
+        <article class="favorite-card"><img src="geometrydash.jpg" alt="Sampul Geometry Dash"><a href="https://en.wikipedia.org/wiki/Geometry_Dash" target="_blank" rel="noopener noreferrer">Geometry Dash</a><p>Pencipta: Robert Topala (RobTop)</p></article>
+        <article class="favorite-card"><img src="tekken6.jpg" alt="Sampul Tekken 6"><a href="https://en.wikipedia.org/wiki/Tekken_6" target="_blank" rel="noopener noreferrer">Tekken 6</a><p>Pencipta: Bandai Namco Studios</p></article>
+        <article class="favorite-card"><img src="aspacefortheunbound.png" alt="Sampul A Space for the Unbound"><a href="https://en.wikipedia.org/wiki/A_Space_for_the_Unbound" target="_blank" rel="noopener noreferrer">A Space for the Unbound</a><p>Pencipta: Mojiken Studio</p></article>
+      </div>
+      <h4>Anime</h4>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="onepiece.jpg" alt="Poster One Piece"><a href="https://www.imdb.com/title/tt0388629/" target="_blank" rel="noopener noreferrer">One Piece</a><p>Pencipta: Eiichiro Oda</p></article>
+        <article class="favorite-card"><img src="naruto.jpg" alt="Poster Naruto"><a href="https://www.imdb.com/title/tt0409591/" target="_blank" rel="noopener noreferrer">Naruto</a><p>Pencipta: Masashi Kishimoto</p></article>
+        <article class="favorite-card"><img src="AOT.jpg" alt="Poster Attack on Titan"><a href="https://www.imdb.com/title/tt2560140/" target="_blank" rel="noopener noreferrer">Attack on Titan</a><p>Pencipta: Hajime Isayama</p></article>
+        <article class="favorite-card"><img src="mha.jpg" alt="Poster My Hero Academia"><a href="https://www.imdb.com/title/tt5626028/" target="_blank" rel="noopener noreferrer">My Hero Academia</a><p>Pencipta: Kōhei Horikoshi</p></article>
+      </div>
+    </section>
+    <section class="music-section" aria-label="Pemutar musik DZAKI">
+      <h3>Musik Favorit DZAKI</h3>
+      <div class="music-player" id="player-dzaki" data-songs='[{"title":"Bertaruh pada Api","cover":"bertaruhpadaapi.jpg","audio":"bertaruhpadaapi.m4a"},{"title":"Sekian, Terima Kasih","cover":"sekianterimakasih.jpg","audio":"sekianterimakasih.m4a"},{"title":"Lautan Tinggal Kenangan","cover":"lautantinggalkenangan.jpg","audio":"lautantinggalkenangan.m4a"},{"title":"Mati Muda","cover":"matimuda.jpg","audio":"mati muda.m4a"},{"title":"Rock Jelek","cover":"rockjelek.png","audio":"rockjelek.m4a"}]'>
+        <img class="music-cover" src="bertaruhpadaapi.jpg" alt="Sampul Bertaruh pada Api">
+        <div class="music-meta"><h4 class="music-title">Bertaruh pada Api</h4><audio controls preload="none" src="bertaruhpadaapi.m4a">Browser tidak mendukung audio.</audio><p class="music-status" aria-live="polite">Lagu 1 dari 5</p><div class="music-controls"><button type="button" onclick="gantiLagu('player-dzaki', -1)">⏮ Sebelumnya</button><button type="button" onclick="gantiLagu('player-dzaki', 1)">Berikutnya ⏭</button></div></div>
+      </div>
+    </section>
+    <section class="galeri-easter" id="galeri-dzaki" hidden>
+      <h3>10 Foto Rahasia DZAKI</h3>
+      <div class="galeri-slide" id="galeri-slider-dzaki" data-photos='[{"src":"dzaki.jpg","name":"DZAKI"},{"src":"dzaka.jpg","name":"DZAKA"},{"src":"a3.jpeg","name":"A3"},{"src":"faz.jpeg","name":"FAZA"},{"src":"kev.jpeg","name":"KEVIN"},{"src":"kik.jpeg","name":"RISKY"},{"src":"nop.jpeg","name":"NAUFAL"},{"src":"rizz.jpeg","name":"HARIS"},{"src":"ARK.jpeg","name":"ARKHAN"},{"src":"crt.jpeg","name":"AFWAN"}]'>
+        <figure><img src="dzaki.jpg" alt="Foto DZAKI"><figcaption>DZAKI</figcaption></figure>
+        <div class="galeri-kontrol"><button type="button" onclick="geserFotoDzaki(-1)">❮ Foto sebelumnya</button><span class="galeri-hitung">1 dari 10</span><button type="button" onclick="geserFotoDzaki(1)">Foto berikutnya ❯</button></div>
+      </div>
+      <h3 style="margin-top:20px">Lagu Easter Egg</h3>
+      <div class="music-player" id="player-dzaki-rahasia" data-songs='[{"title":"Introvert","cover":"introvert.jpg","audio":"introvert.m4a"},{"title":"Jefferson","cover":"jefferson.png","audio":"jefferson.m4a"},{"title":"Lautan Bunga Berwarna Terang","cover":"lautanbungaberwarnaterang.jpg","audio":"lautanbungaberwarnaterang.m4a"}]'>
+        <img class="music-cover" src="introvert.jpg" alt="Sampul Introvert">
+        <div class="music-meta"><h4 class="music-title">Introvert</h4><audio controls preload="none" src="introvert.m4a">Browser tidak mendukung audio.</audio><p class="music-status" aria-live="polite">Lagu 1 dari 3</p><div class="music-controls"><button type="button" onclick="gantiLagu('player-dzaki-rahasia', -1)">⏮ Sebelumnya</button><button type="button" onclick="gantiLagu('player-dzaki-rahasia', 1)">Berikutnya ⏭</button></div></div>
+      </div>
+    </section>
+    <p class="julukan">Julukan: Si Paling Telat</p>
+
+    <h4>Riwayat</h4>
+    <p>dikenal sebagai orang yang ingin selalu menjandi orang lebih baik. entah itu beneran atau mitos</p>
+
+    <div class="founder-profil"><span class="founder-badge">The Founder</span></div>
+
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"Hidup bebas seperti burung tanpa tuan"</blockquote>
+
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>progammer katanya</td></tr>
+      <tr><td>Hobi</td><td>Bikin proyek tak berbuah hasil</td></tr>
+      <tr><td>Tingkat kocak</td><td>9/10</td></tr>
+    </table>
+   
+  </article>
+</main>
+
+<main id="profil-anggota2" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="ARK.jpeg" alt="ARKHAN"></div>
+    <h2>ARKHAN</h2>
+    <section class="favorite-section" aria-label="Game favorit ARKHAN">
+      <h3>Game Favorit ARKHAN</h3>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="mlbb.jpg" alt="Sampul Mobile Legends: Bang Bang"><a href="https://en.wikipedia.org/wiki/Mobile_Legends:_Bang_Bang" target="_blank" rel="noopener noreferrer">Mobile Legends</a><p>Pencipta: Moonton</p></article>
+        <article class="favorite-card"><img src="roblox.png" alt="Logo Roblox"><a href="https://en.wikipedia.org/wiki/Roblox" target="_blank" rel="noopener noreferrer">Roblox</a><p>Pencipta: David Baszucki dan Erik Cassel</p></article>
+        <article class="favorite-card"><img src="tekken6.jpg" alt="Sampul Tekken 6"><a href="https://en.wikipedia.org/wiki/Tekken_6" target="_blank" rel="noopener noreferrer">Tekken 6</a><p>Pencipta: Bandai Namco Studios</p></article>
+      </div>
+    </section>
+    <section class="music-section" aria-label="Pemutar musik ARKHAN">
+      <h3>Musik Favorit ARKHAN</h3>
+      <div class="music-player" id="player-arkhan" data-songs='[{"title":"Gala Bunga Matahari","cover":"galabungamatahari.jpg","audio":"galabungamatahari.m4a"},{"title":"Cincin","cover":"cincin.jpg","audio":"cincin.m4a"},{"title":"Evaluasi","cover":"evaluasi.jpg","audio":"evaluasi.m4a"}]'>
+        <img class="music-cover" src="galabungamatahari.jpg" alt="Sampul Gala Bunga Matahari">
+        <div class="music-meta"><h4 class="music-title">Gala Bunga Matahari</h4><audio controls preload="none" src="galabungamatahari.m4a">Browser tidak mendukung audio.</audio><p class="music-status" aria-live="polite">Lagu 1 dari 3</p><div class="music-controls"><button type="button" onclick="gantiLagu('player-arkhan', -1)">⏮ Sebelumnya</button><button type="button" onclick="gantiLagu('player-arkhan', 1)">Berikutnya ⏭</button></div></div>
+      </div>
+      <button class="love-trigger" type="button" onclick="klikLoveArkhan()" aria-label="Tekan hati tiga kali untuk membuka kejutan">💖 Love Sasa <span id="hitung-love">0/3</span></button>
+      <p class="easter-status" id="status-arkhan" aria-live="polite"></p>
+      <div class="love-reveal" id="love-reveal" hidden> ARKHAN SUKA SASA </div>
+    </section>
+    <p class="julukan">Julukan: kementrian penyolongan</p>
+
+    <h4>Riwayat</h4>
+    <p>konon katanya beliau bukan dari bumi dan umur nya lebih dari 60 juta tahun lalu.</p>
+
+    <div class="founder-profil"><span class="founder-badge">The Founder</span></div>
+
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"Hidup memang berat,namun indah jika lewatin bersama"</blockquote>
+
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>Kementrian penyolongan</td></tr>
+      <tr><td>Hobi</td><td>mencari barang yang hilang</td></tr>
+      <tr><td>Tingkat kocak</td><td>8/10</td></tr>
+    </table>
+    
+  </article>
+ 
+</main>
+
+<main id="profil-anggota3" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="nop.jpeg" alt="BAGONG"></div>
+    <h2>NAUFAL</h2>
+    <p class="julukan">Julukan: spidermen</p>
+
+    <h4>Riwayat</h4>
+    <p>spidermen di dunia nyata (penderitaan peterparkernya doang)</p>
+
+    <div class="founder-profil"><span class="founder-badge">The Founder</span></div>
+
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"ringan sama dijinjing,berat jinjing lah seseorang"</blockquote>
+
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>Spiderman</td></tr>
+      <tr><td>Hobi</td><td>Mengirim pengingat</td></tr>
+      <tr><td>Tingkat kocak</td><td>7/10</td></tr>
+    </table>
+  </article>
+</main>
+
+<main id="profil-anggota4" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="kev.jpeg" alt="KEVIN"></div>
+    <h2>KEVIN</h2>
+    <p class="julukan">Julukan: astronom & botani</p>
+    <section class="music-section" aria-label="Pemutar musik KEVIN">
+      <h3>Musik Favorit KEVIN</h3>
+      <div class="music-player" id="player-kevin" data-songs='[{"title":"Dark Beach","cover":"darkbeach.jpg","audio":"darkbeach.m4a"},{"title":"About You","cover":"aboutyou.jpg","audio":"aboutyou.m4a"},{"title":"Hope to See You Again","cover":"hopetoseeyouagain.jpg","audio":"hopetoseeyouagain.m4a"}]'>
+        <img class="music-cover" src="darkbeach.jpg" alt="Sampul Dark Beach">
+        <div class="music-meta"><h4 class="music-title">Dark Beach</h4><audio controls preload="none" src="darkbeach.m4a">Browser tidak mendukung audio.</audio><p class="music-status" aria-live="polite">Lagu 1 dari 3</p><div class="music-controls"><button type="button" onclick="gantiLagu('player-kevin', -1)">⏮ Sebelumnya</button><button type="button" onclick="gantiLagu('player-kevin', 1)">Berikutnya ⏭</button></div></div>
+      </div>
+    </section>
+    <h4>Riwayat</h4>
+    <p>Seorang astronom dan botani yang suka memotret bintang dan merawat tanaman.</p>
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"Bangkit,Berjuang,Taklukan."</blockquote>
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>astronom & botani</td></tr>
+      <tr><td>Hobi</td><td>Memotret tanpa fokus</td></tr>
+      <tr><td>Tingkat kocak</td><td>8/10</td></tr>
+    </table>
+  </article>
+</main>
+
+<main id="profil-anggota5" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="kik.jpeg" alt="RISKY"></div>
+    <h2>RISKY</h2>
+    <p class="julukan">Julukan: Pakar analisis anime harem</p>
+    <section class="favorite-section" aria-label="Anime favorit RISKY">
+      <h3>Anime Favorit RISKY</h3>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="mha.jpg" alt="Poster My Hero Academia"><a href="https://www.imdb.com/title/tt5626028/" target="_blank" rel="noopener noreferrer">My Hero Academia</a><p>Pencipta: Kōhei Horikoshi</p></article>
+        <article class="favorite-card"><img src="blackclover.jpg" alt="Poster Black Clover"><a href="https://www.imdb.com/title/tt7441658/" target="_blank" rel="noopener noreferrer">Black Clover</a><p>Pencipta: Yūki Tabata</p></article>
+        <article class="favorite-card"><img src="Mairimashita iruma kun.jpg" alt="Poster Welcome to Demon School! Iruma-kun"><a href="https://www.imdb.com/title/tt11034066/" target="_blank" rel="noopener noreferrer">Welcome to Demon School! Iruma-kun</a><p>Pencipta: Osamu Nishi</p></article>
+      </div>
+    </section>
+    <h4>Riwayat</h4>
+    <p>Seorang pakar dalam menganalisis genre anime harem.</p>
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"Kesuksesan bukanlah hasil dari kebetulan. Kesuksesan tercipta dari kerja keras, ketekunan, pembelajaran, pengorbanan, dan yang paling penting, kecintaan pada apa yang sedang kamu lakukan."</blockquote>
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>Pakar analisis anime harem</td></tr>
+      <tr><td>Hobi</td><td>Menghitung patungan</td></tr>
+      <tr><td>Tingkat kocak</td><td>6/10</td></tr>
+    </table>
+  </article>
+</main>
+
+<main id="profil-anggota6" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="crt.jpeg" alt="AFWAN"></div>
+    <h2>AFWAN</h2>
+    <p class="julukan">Julukan: KING CRT</p>
+    <section class="favorite-section" aria-label="Game favorit AFFAN">
+      <h3>Game Favorit AFFAN</h3>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="mlbb.jpg" alt="Sampul Mobile Legends: Bang Bang"><a href="https://en.wikipedia.org/wiki/Mobile_Legends:_Bang_Bang" target="_blank" rel="noopener noreferrer">Mobile Legends</a><p>Pencipta: Moonton</p></article>
+        <article class="favorite-card"><img src="freefiremax.jpg" alt="Sampul Free Fire MAX"><a href="https://en.wikipedia.org/wiki/Free_Fire_(video_game)" target="_blank" rel="noopener noreferrer">Free Fire MAX</a><p>Pencipta: Garena</p></article>
+        <article class="favorite-card"><img src="fcmobile.jpg" alt="Sampul EA Sports FC Mobile"><a href="https://en.wikipedia.org/wiki/EA_Sports_FC_Mobile" target="_blank" rel="noopener noreferrer">FC Mobile</a><p>Pencipta: EA Mobile</p></article>
+      </div>
+    </section>
+    <h4>Riwayat</h4>
+    <p>Adalah sebuah raja di kerajaan crt</p>
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"Tidak ada yang sempurna di dunia ini."</blockquote>
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>king crt</td></tr>
+      <tr><td>Hobi</td><td>bermain rubik sama sepakbola</td></tr>
+      <tr><td>Tingkat kocak</td><td>7/10</td></tr>
+    </table>
+  </article>
+</main>
+
+<main id="profil-anggota7" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="rizz.jpeg" alt="HARIS"></div>
+    <h2>HARIS</h2>
+    <p class="julukan">Julukan: Penasihat Sarkasme</p>
+    <section class="favorite-section" aria-label="Game favorit HARIS">
+      <h3>Game Favorit HARIS</h3>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="mlbb.jpg" alt="Sampul Mobile Legends: Bang Bang"><a href="https://en.wikipedia.org/wiki/Mobile_Legends:_Bang_Bang" target="_blank" rel="noopener noreferrer">Mobile Legends</a><p>Pencipta: Moonton</p></article>
+        <article class="favorite-card"><img src="mcgg.jpg" alt="Gambar Magic Chess: Go Go"><a href="https://en.wikipedia.org/wiki/Magic_Chess:_Go_Go" target="_blank" rel="noopener noreferrer">MCGG</a><p>Pencipta: Moonton (spin-off Mobile Legends)</p></article>
+      </div>
+    </section>
+    <section class="favorite-section" aria-label="Anime favorit HARIS">
+      <h3>Anime Favorit HARIS</h3>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="rezero.jpg" alt="Poster Re:Zero"><a href="https://www.imdb.com/title/tt5607616/" target="_blank" rel="noopener noreferrer">Re:Zero</a><p>Pencipta: Tappei Nagatsuki</p></article>
+        <article class="favorite-card"><img src="bluearchive.jpg" alt="Ilustrasi Blue Archive"><a href="https://www.imdb.com/title/tt30989205/" target="_blank" rel="noopener noreferrer">Blue Archive</a><p>Anime: Blue Archive: The Animation (2024) · Game: NAT Games (Nexon Games)</p></article>
+      </div>
+    </section>
+    <h4>Riwayat</h4>
+    <p>seseorang penasihat di kerajaan crt</p>
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"Bersantailah kalo kamu sempat"</blockquote>
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>Penasihat Sarkasme</td></tr>
+      <tr><td>Hobi</td><td>Berkomentar di grup</td></tr>
+      <tr><td>Tingkat kocak</td><td>9/10</td></tr>
+    </table>
+  </article>
+</main>
+
+<main id="profil-anggota8" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="faz.jpeg" alt="FAZA"></div>
+    <h2>FAZA</h2>
+    <p class="julukan">Julukan: orang have FUN</p>
+    <section class="favorite-section" aria-label="Favorit FAZA">
+      <h3>Favorit FAZA</h3>
+      <h4>Game</h4>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="mlbb.jpg" alt="Sampul Mobile Legends: Bang Bang"><a href="https://en.wikipedia.org/wiki/Mobile_Legends:_Bang_Bang" target="_blank" rel="noopener noreferrer">Mobile Legends</a><p>Pencipta game: Moonton</p></article>
+        <article class="favorite-card"><img src="minecraft.jpg" alt="Sampul Minecraft"><a href="https://en.wikipedia.org/wiki/Minecraft" target="_blank" rel="noopener noreferrer">Minecraft</a><p>Pencipta: Markus Persson</p></article>
+        <article class="favorite-card"><img src="bussid.jpg" alt="Sampul Bus Simulator Indonesia"><a href="https://en.wikipedia.org/w/index.php?search=Bus+Simulator+Indonesia" target="_blank" rel="noopener noreferrer">Bus Simulator Indonesia</a><p>Pencipta: Maleo</p></article>
+      </div>
+      <h4>Anime</h4>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="naruto.jpg" alt="Poster Naruto"><a href="https://www.imdb.com/title/tt0409591/" target="_blank" rel="noopener noreferrer">Naruto</a><p>Pencipta seri: Masashi Kishimoto</p></article>
+        <article class="favorite-card"><img src="jjk.jpg" alt="Poster Jujutsu Kaisen"><a href="https://www.imdb.com/title/tt12343534/" target="_blank" rel="noopener noreferrer">Jujutsu Kaisen</a><p>Pencipta seri: Gege Akutami</p></article>
+        <article class="favorite-card"><img src="AOT.jpg" alt="Poster Attack on Titan"><a href="https://www.imdb.com/title/tt2560140/" target="_blank" rel="noopener noreferrer">Attack on Titan</a><p>Pencipta seri: Hajime Isayama</p></article>
+      </div>
+    </section>
+    <h4>Riwayat</h4>
+    <p>seseorang bocah dengan tingkat kekocakan yang tinggi.</p>
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"Hukum bernapas di dekat mayat=SOMBONG"</blockquote>
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>orang have FUN</td></tr>
+      <tr><td>Hobi</td><td>Datang terakhir</td></tr>
+      <tr><td>Tingkat kocak</td><td>8/10</td></tr>
+    </table>
+  </article>
+</main>
+
+<main id="profil-anggota9" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke Anggota A3</button>
+  <article class="artikel">
+    <div class="foto-profil"><img src="dzaka.jpg" alt="DZAKA"></div>
+    <h2>DZAKA</h2>
+    <p class="julukan">Julukan: SIpalin elitis</p>
+    <section class="favorite-section" aria-label="Film dan buku favorit DZAKA">
+      <h3>Favorit DZAKA</h3>
+      <h4>Film</h4>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="interstellar.jpg" alt="Poster Interstellar"><a href="https://www.imdb.com/title/tt0816692/" target="_blank" rel="noopener noreferrer">Interstellar</a><p>Sutradara: Christopher Nolan</p></article>
+        <article class="favorite-card"><img src="bigworld.jpg" alt="Poster Big World"><a href="https://www.imdb.com/title/tt30476518/" target="_blank" rel="noopener noreferrer">Big World</a><p>Sutradara: Yang Lina · 2024</p></article>
+      </div>
+      <h4>Buku</h4>
+      <div class="favorite-grid">
+        <article class="favorite-card"><img src="metamorphosis.jpg" alt="Sampul The Metamorphosis"><a href="https://en.wikipedia.org/wiki/The_Metamorphosis" target="_blank" rel="noopener noreferrer">The Metamorphosis</a><p>Pengarang: Franz Kafka</p></article>
+        <article class="favorite-card"><img src="monster.jpg" alt="Sampul The Monster"><a href="https://en.wikipedia.org/w/index.php?search=The+Monster+book" target="_blank" rel="noopener noreferrer">The Monster</a><p>Pengarang belum dipastikan; ada beberapa karya dengan judul ini.</p></article>
+      </div>
+    </section>
+    <section class="music-section" aria-label="Pemutar musik DZAKA">
+      <h3>Musik Favorit DZAKA</h3>
+      <div class="music-player" id="player-dzaka" data-songs='[{"title":"Impostor Syndrome","cover":"impostersyndrome.jpg","audio":"impostersyndrome.m4a"},{"title":"Sleep Well","cover":"sleepwell.jpg","audio":"sleepwell.m4a"}]'>
+        <img class="music-cover" src="impostersyndrome.jpg" alt="Sampul Impostor Syndrome">
+        <div class="music-meta"><h4 class="music-title">Impostor Syndrome</h4><audio controls preload="none" src="impostersyndrome.m4a">Browser tidak mendukung audio.</audio><p class="music-status" aria-live="polite">Lagu 1 dari 2</p><div class="music-controls"><button type="button" onclick="gantiLagu('player-dzaka', -1)">⏮ Sebelumnya</button><button type="button" onclick="gantiLagu('player-dzaka', 1)">Berikutnya ⏭</button></div></div>
+      </div>
+    </section>
+    <h4>Riwayat</h4>
+    <p>orang nihilisme.</p>
+    <h4>Kutipan</h4>
+    <blockquote class="kutipan">"Hidup itu kosong, tapi kita masih bisa bawa senyum."</blockquote>
+    <h4>Data Singkat</h4>
+    <table class="tabel-data">
+      <tr><td>Jabatan</td><td>SIpalin elitis</td></tr>
+      <tr><td>Hobi</td><td>Berlagak elitis</td></tr>
+      <tr><td>Tingkat kocak</td><td>7/10</td></tr>
+    </table>
+  </article>
+</main>
+
+<main id="profil-momen1" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke A3</button>
+  <article class="artikel">
+    <div class="tanggal-momen">Juli 2024</div>
+    <h2>Insiden Nasi Goreng Gosong</h2>
+    <p class="julukan">Berita kocak dari A3</p>
+
+    <h4>Isi Berita</h4>
+    <p>Contoh cerita. Nasi goreng hangus saat kumpul di rumah salah satu anggota, dan seluruh grup sepakat itu rasa paling berkesan.</p>
+
+    <h4>Pihak Terkait</h4>
+    <p>Anggota 1, Anggota 2, dan Anggota 3 (ganti dengan nama asli).</p>
+
+    <h4>Kutipan Narasumber</h4>
+    <blockquote class="kutipan">"Ini gosong bukan karena api, tapi karena semangat."</blockquote>
+    <p class="catatan">Teks ini contoh. Ganti dengan cerita asli.</p>
+  </article>
+</main>
+
+<main id="profil-momen2" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke A3</button>
+  <article class="artikel">
+    <div class="tanggal-momen">Desember 2024</div>
+    <h2>Trip Pacitan yang Salah Jalan</h2>
+    <p class="julukan">Perjalanan dua jam yang jadi enam jam</p>
+
+    <h4>Isi Berita</h4>
+    <p>Contoh cerita. Rute yang seharusnya dua jam berubah menjadi enam jam karena salah belok dan satu kali berhenti yang tidak direncanakan.</p>
+
+    <h4>Pihak Terkait</h4>
+    <p>Anggota 4, Anggota 5, dan Anggota 6 (ganti dengan nama asli).</p>
+
+    <h4>Kutipan Narasumber</h4>
+    <blockquote class="kutipan">"Ini jalan pintas, percaya saja."</blockquote>
+    <p class="catatan">Teks ini contoh. Ganti dengan cerita asli.</p>
+  </article>
+</main>
+
+<main id="profil-momen3" class="profil">
+  <button class="kembali" onclick="tampilUtama()">&larr; Kembali ke A3</button>
+  <article class="artikel">
+    <div class="tanggal-momen">Maret 2025</div>
+    <h2>Rencana Kumpul yang Batal Tiga Kali</h2>
+    <p class="julukan">Akhirnya kumpul juga, meski tanpa rencana</p>
+
+    <h4>Isi Berita</h4>
+    <p>Contoh cerita. Rencana kumpul dibatalkan tiga kali, dan pertemuan keempat terjadi begitu saja tanpa janji resmi.</p>
+
+    <h4>Pihak Terkait</h4>
+    <p>Seluruh anggota A3 (ganti dengan daftar nama asli).</p>
+
+    <h4>Kutipan Narasumber</h4>
+    <blockquote class="kutipan">"Kumpul? Ya sudah, aku sudah di jalan."</blockquote>
+    <p class="catatan">Teks ini contoh. Ganti dengan cerita asli.</p>
+  </article>
+</main>
+
+<footer>
+  A3 &copy; 2026 &middot; Dibuat dengan serius, diisi dengan tawa.
+</footer>
+
+<script>
+  const hitunganNama = { dzaki: 0, arkhan: 0 };
+
+  function daftarLagu(player) {
+    return JSON.parse(player.dataset.songs);
+  }
+
+  function gantiLagu(playerId, arah) {
+    const player = document.getElementById(playerId);
+    const lagu = daftarLagu(player);
+    const audio = player.querySelector('audio');
+    const sampul = player.querySelector('.music-cover');
+    const judul = player.querySelector('.music-title');
+    const status = player.querySelector('.music-status');
+    const indeks = Number(player.dataset.index || 0);
+    const selanjutnya = (indeks + arah + lagu.length) % lagu.length;
+    const pilihan = lagu[selanjutnya];
+
+    player.dataset.index = String(selanjutnya);
+    audio.pause();
+    audio.src = pilihan.audio;
+    audio.load();
+    sampul.src = pilihan.cover;
+    sampul.alt = 'Sampul ' + pilihan.title;
+    judul.textContent = pilihan.title;
+    status.textContent = 'Lagu ' + (selanjutnya + 1) + ' dari ' + lagu.length;
+    audio.play().catch(() => {
+      status.textContent = 'Lagu ' + (selanjutnya + 1) + ' dari ' + lagu.length + ' — tekan Putar untuk mulai.';
+    });
+  }
+
+  function geserFotoDzaki(arah) {
+    const galeri = document.getElementById('galeri-slider-dzaki');
+    const foto = JSON.parse(galeri.dataset.photos);
+    const indeks = Number(galeri.dataset.index || 0);
+    const selanjutnya = (indeks + arah + foto.length) % foto.length;
+    const pilihan = foto[selanjutnya];
+    galeri.dataset.index = String(selanjutnya);
+    const img = galeri.querySelector('img');
+    img.src = pilihan.src;
+    img.alt = 'Foto ' + pilihan.name;
+    galeri.querySelector('figcaption').textContent = pilihan.name;
+    galeri.querySelector('.galeri-hitung').textContent = (selanjutnya + 1) + ' dari ' + foto.length;
+  }
+
+  function klikNamaDzaki() {
+    hitunganNama.dzaki += 1;
+    const status = document.getElementById('status-dzaki');
+    if (hitunganNama.dzaki >= 3) {
+      document.getElementById('galeri-dzaki').hidden = false;
+      status.textContent = 'Easter egg terbuka! 10 foto dan 3 lagu rahasia.';
+    } else {
+      status.textContent = 'Klik nama ' + (3 - hitunganNama.dzaki) + ' kali lagi untuk kejutan.';
+    }
+  }
+
+  function klikLoveArkhan() {
+    hitunganNama.arkhan += 1;
+    const status = document.getElementById('status-arkhan');
+    document.getElementById('hitung-love').textContent = Math.min(hitunganNama.arkhan, 3) + '/3';
+    if (hitunganNama.arkhan >= 3) {
+      document.getElementById('love-reveal').hidden = false;
+      status.textContent = 'Kejutan Love Sasa terbuka!';
+    } else {
+      status.textContent = 'Tekan Love Sasa ' + (3 - hitunganNama.arkhan) + ' kali lagi.';
+    }
+  }
+
+  function bukaProfil(id) {
+    document.getElementById('utama').style.display = 'none';
+    document.querySelectorAll('.profil').forEach(p => p.classList.remove('aktif'));
+    document.getElementById('profil-' + id.replace('anggota', 'anggota')).classList.add('aktif');
+    window.scrollTo(0, 0);
+  }
+  function toggleTema() {
+    const html = document.documentElement;
+    const gelap = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', gelap ? 'light' : 'dark');
+    document.querySelector('.tombol-tema').textContent = gelap ? 'Mode Gelap' : 'Mode Terang';
+  }
+  function geserAnggota(arah) {
+    document.getElementById('slider').scrollBy({ left: arah * 216, behavior: 'smooth' });
+  }
+  function geserMomen(arah) {
+    const s = document.getElementById('slider-momen');
+    s.scrollBy({ left: arah * 300, behavior: 'smooth' });
+  }
+  function tampilUtama() {
+    document.querySelectorAll('.profil').forEach(p => p.classList.remove('aktif'));
+    document.getElementById('utama').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+</script>
+
+</body>
+</html>
